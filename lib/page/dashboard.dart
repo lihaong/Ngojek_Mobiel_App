@@ -16,20 +16,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  late Box<UserModel> _myBox;
-  late SharedPreferences _prefs;
-
-  @override
-  void initState() {
-    super.initState();
-    _myBox = Hive.box(boxName);
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        _prefs = prefs;
-      });
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +29,9 @@ class _DashboardPageState extends State<DashboardPage> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              _myBox.close();
-              _prefs.setBool('isLoggedIn', false);
-              _prefs.remove('username');
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => MyApp(isLoggedIn: false)),
               );
             },
           ),

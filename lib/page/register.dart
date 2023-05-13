@@ -27,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _myBox = Hive.box(boxName);
   }
 
+
   void _submit() {
     final form = _formKey.currentState;
     if (form!.validate()) {
@@ -58,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: ListView(

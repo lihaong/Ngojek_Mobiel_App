@@ -1,4 +1,4 @@
-// import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,23 +12,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  String username = prefs.getString('username') ?? '';
   await Hive.initFlutter();
   Hive.registerAdapter<UserModel>(UserModelAdapter());
   await Hive.openBox<UserModel>(boxName);
-  runApp(MyApp(isLoggedIn: isLoggedIn, username: username));
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-  final String username;
-  const MyApp({Key? key, required this.isLoggedIn, required this.username}) : super(key: key);
+  const MyApp({Key? key, required this.isLoggedIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Tugas UTS',
+        title: 'Tugas UAS TPM',
         theme: ThemeData(
           primarySwatch: Colors.teal,
         ),
