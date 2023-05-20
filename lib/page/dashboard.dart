@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'teams.dart';
-import 'datetime.dart';
-import 'login.dart';
-import 'profile.dart';
+import 'package:uastpm/model/pay.dart';
 import '../model/user.dart';
 import 'package:hive/hive.dart';
 import '../main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
-class DashboardPage extends StatefulWidget {
+class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardState extends State<Dashboard> {
+  late Box<UserModel> _myBox;
+  late Box<PayModel> _myBoxOrder;
+
+  @override
+  void initState() {
+    super.initState();
+    _openBox();
+    // _myBox = Hive.box(boxUser);
+    // _myBoxOrder = Hive.box(boxOrder);
+  }
+
+  void _openBox() async {
+    await Hive.openBox<UserModel>(boxUser);
+    _myBox = Hive.box<UserModel>(boxUser);
+    await Hive.openBox<PayModel>(boxOrder);
+    _myBoxOrder = Hive.box<PayModel>(boxOrder);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +44,8 @@ class _DashboardPageState extends State<DashboardPage> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
+              // _myBox.close();
+              // _myBoxOrder.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => MyApp(isLoggedIn: false)),
@@ -37,68 +54,43 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/profile.png",
-                    width: 70,
-                  ),
-                  SizedBox(height: 10),
-                  Text('Profile'),
-                ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/Mapsicle.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 30),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NbaTeamsList()),
-                );
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/calculator.png',
-                    width: 70,
+          ),
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
                   ),
-                  SizedBox(height: 10),
-                  Text('Calculator'),
                 ],
               ),
-            ),
-            SizedBox(height: 30),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CalendarPage()),
-                );
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/calendar.png',
-                    width: 70,
-                  ),
-                  SizedBox(height: 10),
-                  Text('Date & Time'),
-                ],
+              child: Text(
+                'Hello $Username \n'
+                    'Welcome to the Dashboard!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

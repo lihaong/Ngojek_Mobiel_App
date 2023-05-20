@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:hive/hive.dart';
+import 'package:uastpm/page/login.dart';
 import '../model/user.dart';
 import '../main.dart';
 
@@ -18,13 +18,11 @@ class _RegisterPageState extends State<RegisterPage> {
   String _inputUsername = "";
   String _inputPassword = "";
   bool _obscureText = true;
-  late final encrypt.Key _key;
-  final _iv = encrypt.IV.fromLength(16);
 
   @override
   void initState() {
     super.initState();
-    _myBox = Hive.box(boxName);
+    _myBox = Hive.box(boxUser);
   }
 
 
@@ -41,13 +39,16 @@ class _RegisterPageState extends State<RegisterPage> {
         return;
       }
 
-      final user = UserModel(password: _inputPassword);
+      final user = UserModel(password: _inputPassword, );
 
       _myBox.put(_inputUsername, user);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('User registered successfully')),
+
       );
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+
     }
   }
 
@@ -66,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: <Widget>[
               SizedBox(height: 25.0),
               Image.asset(
-                'assets/images/register.jpg',
+                'assets/images/Maps.png',
                 height: 220,
               ),
               SizedBox(height: 25.0),

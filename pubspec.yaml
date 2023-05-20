@@ -36,9 +36,16 @@ dependencies:
   hive_flutter: ^1.1.0
   http: ^0.13.4
   intl: ^0.18.0
+  geolocator: ^9.0.2
+  uuid: ^3.0.7
   table_calendar: ^3.0.9
   timezone: ^0.7.0
   shared_preferences: ^2.1.1
+  google_maps_flutter: ^2.2.0
+  location: ^4.2.0
+  google_map_polyline_new: ^0.3.0+2
+  maps_toolkit: ^2.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -79,6 +86,9 @@ flutter:
     - assets/images/trapezoid.png
     - assets/images/login.jpg
     - assets/images/register.jpg
+    - assets/images/Maps.png
+    - assets/images/Mapsicle.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

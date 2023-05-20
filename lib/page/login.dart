@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:uastpm/page/maps.dart';
 import '../main.dart';
 import 'dashboard.dart';
 import '../model/user.dart';
 import 'register.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'btmNavbar.dart';
+import 'dashboard.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -35,15 +37,9 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  @override
-  void dispose() {
-    _myBox.close();
-    super.dispose();
-  }
-
   void _openBox() async {
-    await Hive.openBox<UserModel>(boxName);
-    _myBox = Hive.box<UserModel>(boxName);
+    await Hive.openBox<UserModel>(boxUser);
+    _myBox = Hive.box<UserModel>(boxUser);
   }
 
   void _submit() {
@@ -54,13 +50,17 @@ class _LoginPageState extends State<LoginPage> {
       if (!_myBox.containsKey(_inputUsername)) {
         // Check if username exists during login
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid username or password')),
+          const SnackBar(content: Text('Invalid username')),
         );
         return;
       }
 
+
       final user = _myBox.get(_inputUsername);
       if (_inputPassword == user!.password) {
+        setState(() {
+          Username = _inputUsername;
+        });
         // Save user's session
         if(_rememberMe){
           _prefs.setBool('isLoggedIn', true);
@@ -70,11 +70,11 @@ class _LoginPageState extends State<LoginPage> {
         }
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DashboardPage()),
+          MaterialPageRoute(builder: (context) => BtmNavBar()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invalid username or password')),
+          SnackBar(content: Text('Invalid password')),
         );
       }
 
@@ -94,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('Login'),
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -106,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
           child: ListView(
             children: <Widget>[
               Image.asset(
-                'assets/images/login.jpg',
+                'assets/images/Maps.png',
                 height: 220,
               ),
               SizedBox(height: 25.0),
@@ -164,14 +163,12 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: _register,
                 child: Text('Create Account'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 146, 204, 0),
+                  backgroundColor: Colors.teal,
                 ),
               ),
             ],
           ),
         ),
-
-
       ),
     );
   }

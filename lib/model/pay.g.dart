@@ -6,17 +6,17 @@ part of 'pay.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class OrderModelAdapter extends TypeAdapter<OrderModel> {
+class PayModelAdapter extends TypeAdapter<PayModel> {
   @override
   final int typeId = 9;
 
   @override
-  OrderModel read(BinaryReader reader) {
+  PayModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return OrderModel(
+    return PayModel(
       username: fields[0] as String,
       totalOrder: fields[1] as String?,
       timeOrder: fields[2] as String?,
@@ -24,7 +24,7 @@ class OrderModelAdapter extends TypeAdapter<OrderModel> {
   }
 
   @override
-  void write(BinaryWriter writer, OrderModel obj) {
+  void write(BinaryWriter writer, PayModel obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -41,7 +41,7 @@ class OrderModelAdapter extends TypeAdapter<OrderModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderModelAdapter &&
+      other is PayModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

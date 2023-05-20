@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uastpm/page/profile.dart';
 import 'dashboard.dart';
-import 'profile.dart';
 import 'maps.dart';
+import 'orders.dart';
+
 class BtmNavBar extends StatefulWidget {
   const BtmNavBar({Key? key}) : super(key: key);
 
@@ -27,51 +29,71 @@ class _BtmNavBarState extends State<BtmNavBar> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.jumpToPage(index);
+    if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+      });
+      _pageController.jumpToPage(index);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = [
       Dashboard(),
-      MapsPage(), // Add MapsPage widget here
-      ProfilePage(),
+      MapPage(),
+      OrdersPage(),
+      ProfilePage(), // Added a new page for tracking orders
     ];
 
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onItemTapped,
-        children: _widgetOptions,
-      ),
-      bottomNavigationBar: PreferredSize(
-        preferredSize: Size.fromHeight(56),
-        child: BottomNavigationBar(
-          backgroundColor: Color(0xFF191825),
-          currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xFF865DFF),
-          unselectedItemColor: Colors.grey,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard, size: 30),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map, size: 30),
-              label: 'Maps',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 30),
-              label: 'Profile',
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (_pageController.page?.round() == 1) {
+          _pageController.jumpToPage(0);
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          physics: NeverScrollableScrollPhysics(), // Disable page sliding
+          children: _widgetOptions,
+        ),
+        bottomNavigationBar: PreferredSize(
+          preferredSize: Size.fromHeight(56),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            unselectedItemColor: Colors.teal,
+            selectedItemColor: Colors.white,
+            onTap: _onItemTapped,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard, size: 30),
+                label: 'Dashboard',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map, size: 30),
+                label: 'Maps',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.assignment, size: 30),
+                label: 'Orders', // Added a new item for tracking orders
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person, size: 30),
+                label: 'Profile',
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
