@@ -14,23 +14,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late Box<UserModel> _myBox;
-  late Box<PayModel> _myBoxOrder;
-
-  @override
-  void initState() {
-    super.initState();
-    _openBox();
-    // _myBox = Hive.box(boxUser);
-    // _myBoxOrder = Hive.box(boxOrder);
-  }
-
-  void _openBox() async {
-    await Hive.openBox<UserModel>(boxUser);
-    _myBox = Hive.box<UserModel>(boxUser);
-    await Hive.openBox<PayModel>(boxOrder);
-    _myBoxOrder = Hive.box<PayModel>(boxOrder);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +23,7 @@ class _DashboardState extends State<Dashboard> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text('Dashboard'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              // _myBox.close();
-              // _myBoxOrder.clear();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyApp(isLoggedIn: false)),
-              );
-            },
-          ),
-        ],
+
       ),
       body: Stack(
         children: [
@@ -79,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               child: Text(
-                'Hello $Username \n'
+                'Hello $username \n'
                     'Welcome to the Dashboard!',
                 style: TextStyle(
                   fontSize: 24,

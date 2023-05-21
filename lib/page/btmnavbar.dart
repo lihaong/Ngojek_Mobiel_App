@@ -70,8 +70,8 @@ class _BtmNavBarState extends State<BtmNavBar> {
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: _selectedIndex,
-            unselectedItemColor: Colors.teal,
-            selectedItemColor: Colors.white,
+            unselectedItemColor: Theme.of(context).textTheme.bodyText2!.color, // Use the unselected text color from the current theme
+            selectedItemColor: Theme.of(context).accentColor, // Use the accent color from the current theme
             onTap: _onItemTapped,
             items: const [
               BottomNavigationBarItem(

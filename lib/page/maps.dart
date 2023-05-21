@@ -1,10 +1,11 @@
-import 'dart:math' show asin, atan2, cos, pi, sin, sqrt;
-import 'package:geolocator/geolocator.dart';
+import 'dart:math' show atan2, cos, pi, sin, sqrt;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_map_polyline_new/google_map_polyline_new.dart';
 import 'payment.dart';
 import 'package:intl/intl.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:uastpm/main.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _MapPageState extends State<MapPage> {
     ],
   ];
 
-  LatLng _mapInitLocation = LatLng(-7.782321, 110.416063);
+  LatLng _mapInitLocation = LatLng(latitude, longitude) ;
 
   LatLng? _originLocation;
   LatLng? _destinationLocation;
@@ -73,18 +74,18 @@ class _MapPageState extends State<MapPage> {
     }
     _isEstimated = true;
 
-    List<LatLng>? _coordinates = await _googleMapPolyline.getCoordinatesWithLocation(
+    List<LatLng>? coordinates = await _googleMapPolyline.getCoordinatesWithLocation(
       origin: _originLocation!,
       destination: _destinationLocation!,
       mode: RouteMode.driving,
     );
 
-    _calculateDistance(_coordinates);
+    _calculateDistance(coordinates);
 
     setState(() {
       _polylines.clear();
     });
-    _addPolyline(_coordinates);
+    _addPolyline(coordinates);
 
 
   }
@@ -141,6 +142,34 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getCoordinatesFromAddress('Europe/Berlin');
+  }
+
+  _getCoordinatesFromAddress(String address) async {
+    try {
+      List<Location> locations = await locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        Location location = locations.first;
+        double latitude = location.latitude;
+        double longitude = location.longitude;
+        // Do something with the latitude and longitude coordinates
+        print('Location : $latitude');
+        setState(() {
+          _mapInitLocation = LatLng(latitude, longitude);
+        });
+      } else {
+        // Handle case when no locations are found for the given address
+        print('No locations found for the address');
+      }
+    } catch (e) {
+      // Handle any errors that occur during the geocoding process
+      print('Error: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -172,7 +201,7 @@ class _MapPageState extends State<MapPage> {
                   onMapCreated: _onMapCreated,
                   polylines: Set<Polyline>.of(_polylines.values),
                   initialCameraPosition: CameraPosition(
-                    target: _mapInitLocation,
+                    target: _mapInitLocation ,
                     zoom: 15,
                   ),
                   onLongPress: (LatLng latLng) {
@@ -192,7 +221,7 @@ class _MapPageState extends State<MapPage> {
                         markerId: MarkerId('origin'),
                         position: _originLocation!,
                         icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueGreen,
+                          BitmapDescriptor.hueAzure,
                         ),
                       ),
                     if (_destinationLocation != null)
@@ -227,15 +256,15 @@ class _MapPageState extends State<MapPage> {
                         children: [
                           Text(
                             'Distance: ${_distance.toStringAsFixed(0)} meters',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
                           Text(
                             'Price in Rupiah: Rp.${rupiahFormat.format(300 * (_distance / 5))}',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
                           Text(
                             'Price in USD: \$ ${usdFormat.format(0.002 * (_distance / 5))}',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
                         ],
                       ),
@@ -267,6 +296,7 @@ class _MapPageState extends State<MapPage> {
               },
               label: Text('Order'),
               icon: Icon(Icons.add),
+              backgroundColor: Colors.lightGreen,
             ),
           SizedBox(height: 8),
           FloatingActionButton.extended(
@@ -278,6 +308,8 @@ class _MapPageState extends State<MapPage> {
             backgroundColor: Colors.orange,
 
           ),
+          SizedBox(height: 16),
+
         ],
       ),
     );

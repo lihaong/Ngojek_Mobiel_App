@@ -1,12 +1,11 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:uastpm/main.dart';
-import 'package:uuid/uuid.dart';
 import '../model/pay.dart';
 import 'package:hive/hive.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'btmNavbar.dart';
+import 'btmnavbar.dart';
 
 class PaymentPage extends StatefulWidget {
   final double distance;
@@ -28,7 +27,6 @@ class _PaymentPageState extends State<PaymentPage> {
   late Box<PayModel> _myBoxOrder;
   late String randomId;
   late String timeInput;
-  late String Id;
   String _selectedTimeZone = 'Asia/Jakarta';
   bool _payWithDollar = false;
 
@@ -38,7 +36,6 @@ class _PaymentPageState extends State<PaymentPage> {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation(_selectedTimeZone));
     _openBox();
-    Id = const Uuid().v4();
   }
 
   String _getCurrentTimeInTimeZone(String timeZoneName) {
@@ -56,6 +53,7 @@ class _PaymentPageState extends State<PaymentPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Payment'),
+        centerTitle: true,
         automaticallyImplyLeading: true,
       ),
       body: Padding(
@@ -132,11 +130,15 @@ class _PaymentPageState extends State<PaymentPage> {
                   child: Text('Cancel'),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                  ),
                   onPressed: () {
                     _saveOrder();
                     _showOrderRecordedDialog();
                   },
-                  child: Text('View Orders'),
+                  child: Text('Confirm Payment'),
+
                 ),
               ],
             ),
@@ -148,12 +150,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void _saveOrder() {
     // Create an instance of the OrderModel and save it to the Hive box
-    NumberFormat numberFormat = NumberFormat('#,##0.00');
+    NumberFormat numberFormatUSD = NumberFormat('#,##0.00');
+    NumberFormat numberFormatIDR = NumberFormat('#,###');
+
     String fixed = _payWithDollar
-        ? '\$ ${numberFormat.format(widget.priceInUSD)}'
-        : 'Rp. ${numberFormat.format(widget.priceInRupiah)}';
+        ? '\$ ${numberFormatUSD.format(widget.priceInUSD)}'
+        : 'Rp. ${numberFormatIDR.format(widget.priceInRupiah)}';
     final order = PayModel(
-      username: Username,
+      username: username,
       totalOrder: fixed,
       timeOrder: _getCurrentTimeInTimeZone(_selectedTimeZone),
     );
@@ -164,7 +168,7 @@ class _PaymentPageState extends State<PaymentPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => BtmNavBar(),
+        builder: (context) => const BtmNavBar(),
       ),
     );
   }

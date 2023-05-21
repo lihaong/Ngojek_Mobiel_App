@@ -30,7 +30,8 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: Text('Orders Detail'),
+        centerTitle: true,
       ),
       body: FutureBuilder<void>(
         future: _openBox(),
@@ -45,12 +46,12 @@ class _OrdersPageState extends State<OrdersPage> {
               builder: (context, box, _) {
                 // Get all orders for the specified username
                 List<PayModel> userOrders = box.values
-                    .where((order) => order.username == Username)
+                    .where((order) => order.username == username)
                     .toList();
 
                 if (userOrders.isEmpty) {
                   return Center(
-                    child: Text('No orders found for ${Username}.'),
+                    child: Text('No orders found for ${username}.'),
                   );
                 }
 
