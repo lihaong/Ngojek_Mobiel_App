@@ -7,7 +7,6 @@ ThemeMode getTimeZoneThemeMode(String timezone) {
   String compare = currentTime.substring(0, 2);
   int temp = int.parse(compare);
 
-  // Compare the current time with the dark mode time range
   if (temp > 6 && temp < 18) {
     return ThemeMode.light;
   } else {

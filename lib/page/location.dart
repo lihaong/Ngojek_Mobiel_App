@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:uastpm/main.dart';
 import 'package:uastpm/page/login.dart';
-
 import '../utils/theme_utils.dart';
 
 class LocationPage extends StatefulWidget {
@@ -53,7 +52,6 @@ class _LocationPageState extends State<LocationPage> {
 
   Future<void> _setTimeZoneThemeMode() async {
     ThemeMode themeMode = getTimeZoneThemeMode(location);
-    print('object $themeMode');
     _setThemeMode(themeMode);
     setState(() {
     }
@@ -125,7 +123,7 @@ class _LocationPageState extends State<LocationPage> {
                     _getCoordinatesFromAddress(location);
                     _setTimeZoneThemeMode();
                     _isLoading = true;
-                    _selectedTimeZone = value!;
+                    _selectedTimeZone = value;
                   });
                   Future.delayed(const Duration(seconds: 2), () {
                     setState(() {

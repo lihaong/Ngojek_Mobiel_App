@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-
 import '../main.dart';
 import '../model/pay.dart';
 import '../model/user.dart';

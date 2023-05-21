@@ -1,7 +1,6 @@
 import 'package:encrypt/encrypt.dart';
 class EncryptData {
 //for AES Algorithms
-
   static Encrypted? encrypted;
 
   static encryptAES(plainText) {

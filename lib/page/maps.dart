@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_map_polyline_new/google_map_polyline_new.dart';
 import 'payment.dart';
 import 'package:intl/intl.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:uastpm/main.dart';
 
 class MapPage extends StatefulWidget {
@@ -38,7 +37,7 @@ class _MapPageState extends State<MapPage> {
     ],
   ];
 
-  LatLng _mapInitLocation = LatLng(latitude, longitude) ;
+  final LatLng _mapInitLocation = LatLng(latitude, longitude) ;
 
   LatLng? _originLocation;
   LatLng? _destinationLocation;
@@ -142,38 +141,10 @@ class _MapPageState extends State<MapPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _getCoordinatesFromAddress('Europe/Berlin');
-  }
-
-  _getCoordinatesFromAddress(String address) async {
-    try {
-      List<Location> locations = await locationFromAddress(address);
-      if (locations.isNotEmpty) {
-        Location location = locations.first;
-        double latitude = location.latitude;
-        double longitude = location.longitude;
-        // Do something with the latitude and longitude coordinates
-        print('Location : $latitude');
-        setState(() {
-          _mapInitLocation = LatLng(latitude, longitude);
-        });
-      } else {
-        // Handle case when no locations are found for the given address
-        print('No locations found for the address');
-      }
-    } catch (e) {
-      // Handle any errors that occur during the geocoding process
-      print('Error: $e');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map Polyline'),
+        title: const Text('Map'),
         centerTitle: true,
         actions: [
           IconButton(
